@@ -1,7 +1,7 @@
 
 
-
 const overviewDiv = document.querySelector(".overview");
+const ulListItems = document.querySelector(".repo-list");
 const username = "Josh-Darling13";
 
 
@@ -9,7 +9,7 @@ async function fetchGitHubInfo (user){
     
     const response = await fetch (`https://api.github.com/users/${user}`);
     let apiInfo = await response.json();
-    console.log(apiInfo);
+  // console.log(apiInfo);
     //return apiInfo
   displayFetchedInfo (apiInfo);
 };
@@ -26,33 +26,38 @@ function displayFetchedInfo (apiInfo){
     const avatar_url = apiInfo.avatar_url;
 
     const profileInfo = `
-<div class="user-info">
-<figure>
-      <img alt="user avatar" src="${avatar_url}" />
-    </figure>
-    <div>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Bio:</strong> ${bio}</p>
-      <p><strong>Location:</strong> ${location}</p>
-      <p><strong>Number of public repos:</strong> ${public_repos}</p>
-    </div> 
+        <div class="user-info">
+            <figure>
+                <img alt="user avatar" src="${avatar_url}" />   
+            </figure>
+        <div>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Bio:</strong> ${bio}</p>
+            <p><strong>Location:</strong> ${location}</p>
+            <p><strong>Number of public repos:</strong> ${public_repos}</p>
+        </div> 
     `;
     overviewDiv.innerHTML = profileInfo;
 };
 
-
-/*
-Below the async function to fetch your GitHub user data, 
-create and name a new function to display the fetched user 
-information on the page. This function should accept the 
-JSON data as a parameter.
-
-Inside the function, create a new div and give it a class
-of “user-info”. 
+async function fetchGitHubRepos (user){
+    
+    const response = await fetch (`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    let apiRespo = await response.json();
+// console.log(apiRespo);
 
 
-Using innerHTML, populate the div, with the following 
-elements for figure, image, and paragraphs:
+displayRepos(apiRespo);
+ 
+};
 
+fetchGitHubRepos(username);
 
-*/
+const displayRepos = function (repos) {
+    for (const repo of repos) {
+      const repoItem = document.createElement("li");
+      repoItem.classList.add("repo");
+      repoItem.innerHTML = `<h3>${repo.name}</h3>`;
+      ulListItems.append(repoItem);
+    }
+};
