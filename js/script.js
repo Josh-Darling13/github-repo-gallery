@@ -2,8 +2,10 @@ const overviewDiv = document.querySelector(".overview");
 const repoList = document.querySelector(".repo-list");
 const reposSection = document.querySelector(".repos");
 const repoDataSection = document.querySelector(".repo-data");
-const username = "Josh-Darling13";
+const backButton = document.querySelector('.view-repos');
+const filterInput = document.querySelector('.filter-repos');
 
+const username = "Josh-Darling13";
 
 async function fetchGitHubInfo (user){
     
@@ -36,7 +38,6 @@ function displayFetchedInfo (apiInfo){
     overviewDiv.innerHTML = profileInfo;
 };
 
-
 async function fetchGitHubRepos (user){
     const response = await fetch (`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     let apiRespo = await response.json();
@@ -61,15 +62,9 @@ repoList.addEventListener("click", function (e) {
     }
   });
 
-
-
-
-
-
 async function fetchGitRepoInfo (username, repoName){
     const response = await fetch (`https://api.github.com/repos/${username}/${repoName}`);
     let repoInfo = await response.json();
-
     const fetchLanguages = await fetch(repoInfo.languages_url);
     const languageData = await fetchLanguages.json();
     const languages = [];
@@ -80,6 +75,9 @@ async function fetchGitRepoInfo (username, repoName){
 };
 
 function displayRepoInfo(repoInfo, languages){
+
+    filterInput.classList.remove("hide");
+    backButton.classList.remove("hide");
     repoDataSection.innerHTML = "";
     repoDataSection.classList.remove("hide");
     reposSection.classList.add("hide");
@@ -93,3 +91,29 @@ function displayRepoInfo(repoInfo, languages){
     `;
     repoDataSection.append(div);
 };
+
+
+backButton.addEventListener('click', function(){
+    reposSection.classList.remove("hide");
+    repoDataSection.classList.add("hide");
+    backButton.classList.add("hide");
+});
+
+filterInput.addEventListener('input', function(e){
+    let invale = e.target.value;
+    console.log(invale);
+    const repos = document.querySelectorAll(".repo");
+
+    const lowerInvale = invale.toLowerCase();
+    for (const repo of repos) {
+      const repoLowerText = repo.innerText.toLowerCase();
+      if (repoLowerText.includes(lowerInvale)) {
+        repo.classList.remove("hide");
+      } else {
+        repo.classList.add("hide");
+      }
+    }
+});
+
+
+
