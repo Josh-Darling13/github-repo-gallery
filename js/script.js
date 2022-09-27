@@ -76,7 +76,6 @@ async function fetchGitRepoInfo (username, repoName){
 
 function displayRepoInfo(repoInfo, languages){
 
-    filterInput.classList.remove("hide");
     backButton.classList.remove("hide");
     repoDataSection.innerHTML = "";
     repoDataSection.classList.remove("hide");
